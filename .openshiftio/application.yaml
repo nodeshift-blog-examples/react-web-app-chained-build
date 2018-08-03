@@ -132,11 +132,13 @@ objects:
         secret: ${GITHUB_WEBHOOK_SECRET}
       type: GitHub
     - type: ConfigChange
-    - imageChange:
-      type: ImageChange
-      from:
-        kind: ImageStreamTag
-        name: react-web-app-builder:latest
+    - type: ImageChange
+      imageChange: {}
+    - type: ImageChange
+      imageChange:
+        from:
+          kind: ImageStreamTag
+          name: react-web-app-builder:latest
   status:
     lastVersion: 0
 - apiVersion: v1
