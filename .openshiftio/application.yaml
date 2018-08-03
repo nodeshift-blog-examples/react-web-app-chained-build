@@ -22,6 +22,11 @@ parameters:
     displayName: Source Directory
     value: .
     required: true
+  - name: OUTPUT_DIR
+    description: The location of the compiled static files from your web apps builder
+    displayName: Output Directory
+    value: build
+    required: false
   - name: GITHUB_WEBHOOK_SECRET
     description: A secret string used to configure the GitHub webhook.
     displayName: GitHub Webhook Secret
@@ -78,6 +83,9 @@ objects:
       type: Git
     strategy:
       sourceStrategy:
+        env:
+          - name: OUTPUT_DIR
+            value: ${OUTPUT_DIR}
         from:
           kind: ImageStreamTag
           name: web-app-builder-runtime:latest
