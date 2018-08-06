@@ -204,7 +204,7 @@ objects:
   metadata:
     labels:
       app: react-web-app
-    name: frontend
+    name: react-web-app
   spec:
     port:
       targetPort: 8080
