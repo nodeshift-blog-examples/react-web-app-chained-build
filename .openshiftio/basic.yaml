@@ -9,8 +9,6 @@ metadata:
     openshift.io/display-name: "Web Application"
     description: Just building a web app with a web builder
 message: "The following service(s) have been created in your project: ${NAME}.\n\nMore message text here"
-labels:
-  app: "web-app-example"
 parameters:
   - name: NAME
     displayName: "Name"
@@ -60,16 +58,6 @@ objects:
       name: '${NAME}'
     spec: {}
   - apiVersion: v1
-    kind: ImageStream
-    metadata:
-      name: web-app-builder-runtime
-    spec:
-      tags:
-        - name: latest
-          from:
-            kind: DockerImage
-            name: 'nodeshift/centos7-s2i-web-app:10.x'
-  - apiVersion: v1
     kind: BuildConfig
     metadata:
       name: '${NAME}'
@@ -90,7 +78,7 @@ objects:
         sourceStrategy:
           from:
             kind: DockerImage
-            name: 'web-app-builder-runtime:latest'
+            name: 'nodeshift/centos7-s2i-web-app:10.x'
       triggers:
         - github:
             secret: '${GITHUB_WEBHOOK_SECRET}'
