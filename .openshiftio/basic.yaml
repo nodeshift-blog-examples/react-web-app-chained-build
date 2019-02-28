@@ -56,11 +56,15 @@ objects:
     kind: ImageStream
     metadata:
       name: '${NAME}'
+      labels:
+        app: '${NAME}'
     spec: {}
   - apiVersion: v1
     kind: BuildConfig
     metadata:
       name: '${NAME}'
+      labels:
+        app: '${NAME}'
     spec:
       output:
         to:
@@ -76,6 +80,9 @@ objects:
       strategy:
         type: Source
         sourceStrategy:
+          env:
+            - name: OUTPUT_DIR
+              value: ${OUTPUT_DIR}
           from:
             kind: DockerImage
             name: 'nodeshift/centos7-s2i-web-app:10.x'
