@@ -7,10 +7,13 @@ metadata:
     tags: nodejs, react, web app
     template.openshift.io/provider-display-name: "Red Hat, Inc."
     description: Just building a little react app with a web builder
+labels:
+  application: modern-web-app
 parameters:
   - name: SOURCE_REPOSITORY_URL
     description: The source URL for the application
     displayName: Source URL
+    value: "https://github.com/lholmquist/react-web-app"
     required: true
   - name: SOURCE_REPOSITORY_REF
     description: The branch name for the application
@@ -42,12 +45,12 @@ objects:
 - apiVersion: v1
   kind: ImageStream
   metadata:
-    name: react-web-app-runtime
+    name: static-web-app-running-on-nginx
   spec: {}
 - apiVersion: v1
   kind: ImageStream
   metadata:
-    name: web-app-builder-runtime
+    name: web-app-s2i-image
   spec:
     tags:
     - name: latest
@@ -88,7 +91,7 @@ objects:
             value: ${OUTPUT_DIR}
         from:
           kind: ImageStreamTag
-          name: web-app-builder-runtime:latest
+          name: web-app-s2i-image:latest
         incremental: true
       type: Source
     triggers:
@@ -103,12 +106,12 @@ objects:
 - apiVersion: v1
   kind: BuildConfig
   metadata:
-    name: react-web-app-runtime
+    name: static-web-app-running-on-nginx
   spec:
     output:
       to:
         kind: ImageStreamTag
-        name: react-web-app-runtime:latest
+        name: static-web-app-running-on-nginx:latest
     postCommit: {}
     resources: {}
     source:
@@ -167,9 +170,9 @@ objects:
             valueFrom:
               fieldRef:
                 fieldPath: metadata.namespace
-          image: react-web-app-runtime
+          image: static-web-app-running-on-nginx
           imagePullPolicy: IfNotPresent
-          name: react-web-app-runtime
+          name: static-web-app-running-on-nginx
           ports:
           - containerPort: 8080
             name: http
@@ -183,10 +186,10 @@ objects:
         imageChangeParams:
           automatic: true
           containerNames:
-            - react-web-app-runtime
+            - static-web-app-running-on-nginx
           from:
             kind: ImageStreamTag
-            name: 'react-web-app-runtime:latest'
+            name: 'static-web-app-running-on-nginx:latest'
 - apiVersion: v1
   kind: Service
   metadata:
